@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-//--Assure l'ubicité du mail grâce au module mongoose-unique-validator
+//--Assure l'unicité du mail grâce au module mongoose-unique-validator
 const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = mongoose.Schema({

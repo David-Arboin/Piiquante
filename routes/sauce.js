@@ -8,7 +8,7 @@ const saucesCtrl = require('../controllers/sauces');
 //*****Routes des sauces
 //--Ajouter une nouvelle Sauce
 router.post('/', auth, multer, saucesCtrl.createSauce);//--multer doit être après auth pour éviter l'enregistrement d'un fichier sans authentification
-  
+
 //--Mettre à jour une Sauce existante
 router.put('/:id', auth, multer, saucesCtrl.modifySauce);
 
