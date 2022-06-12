@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 require("dotenv").config();
 
 module.exports = (req, res, next) => {
-      console.log(process.env)
     try {
 //--Récupération du token dans le header de la requête
       const token = req.headers.authorization.split(' ')[1];//--Split permet de générer un tableau avec deux éléments dont le 1er est le mot bearer (ce mot se place automatiquement devant le token) et le deuxième le token
@@ -27,5 +26,5 @@ module.exports = (req, res, next) => {
     }
 };
 
-//--Clé pour le tokn secret HS256 : javainuse-secret-key
+//--Clé pour le token secret HS256 : javainuse-secret-key
 //--Obtenue par https://www.javainuse.com/jwtgenerator
