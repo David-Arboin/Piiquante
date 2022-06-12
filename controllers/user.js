@@ -2,6 +2,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../schemas/User');
 const jwt = require('jsonwebtoken')
+require("dotenv").config();
 
 
 //--Enregistrement de nouveaux utilisateurs
@@ -43,10 +44,10 @@ exports.login = (req, res, next) => {
                     userId: user._id,
 //--Installation du package jsonwebtoken qui permet de créer des tokens et de les vérifier
                     token: jwt.sign(//--Pour la fonction sign
-//--Argument 1 : payload = Données que l'on encoder si on veut en encoder
+//--Argument 1 : payload = Données que l'on encode si on veut en encoder
                         { userId: user._id },
-//--Argumnt 2 : Clé secrèete pour l'encodage qui en production devra être beaucoup plus longue et aléatoire
-                        'RANDOM_TOKEN_SECRET',
+//--Argumnt 2 : Clé secrète pour l'encodage
+                        process.env.RANDOM_TOKEN_SECRET,
 //--Argument 3 de configuration : Le token expirera au bout de 24h
                         { expiresIn: '24h' }
                     )
