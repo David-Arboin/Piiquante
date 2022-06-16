@@ -1,4 +1,4 @@
-//--Le middleware multer permet de gérer les fichiers entrants
+//--Package qui permet de gérer les fichiers entrants dans les requêtes HTTP
 const multer = require('multer');
 
 //--Dictionnaire ou dossier statique) des extensions de fichier

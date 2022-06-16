@@ -13,6 +13,8 @@ mongoose.connect('mongodb+srv://david-arboin:THEmongodb86@cluster0.kgjcz.mongodb
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+//--Nota : La méthode use a pour principe d'être écoutée pour tout type de requête tant qu'aucune autre fonction est appellée
+
 //--En-tête de sécurité CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');//--Remplacer * par lolalhost 3000 pour ....
@@ -27,6 +29,7 @@ app.use(express.json());
 //--Permet de servir le dossier images
 app.use('/images', express.static(path.join(__dirname, 'images'))); //--driname : Importation de node appelée path qui nous donne accès au chemin de notre système de fichier
 
+//Racine de tout ce qui est lié aux sauces
 app.use('/api/sauces', sauceRoutes);
 
 //Racine de tout ce qui est lié à l'authentification

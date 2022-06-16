@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//--Package de validation pour prévalider les informations avant de les enregistrer
 //--Assure l'unicité du mail grâce au module mongoose-unique-validator
 const uniqueValidator = require('mongoose-unique-validator');
 
@@ -8,7 +9,7 @@ const userSchema = mongoose.Schema({
     password: {type: String, require: true }//-- mot de passe de l'utilisateur haché
 });
 
-//--Applique le unisqueVAlidator au schéma avnt dans faure un modèle
+//--Applique le unisqueValidator au schéma avant dans faire un modèle
 userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('User', userSchema)

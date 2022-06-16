@@ -25,5 +25,3 @@ module.exports = router;
 
 //*****Route des likes et dislikes
 router.post('/:id/like', auth, saucesCtrl.likeSauce)
-
-//--Nota : La méthode use a pour principe d'être écoutée pour tout type de requête tant qu'aucune autre fonction est appellée

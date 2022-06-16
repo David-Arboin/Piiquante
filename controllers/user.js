@@ -1,9 +1,8 @@
 //--Cryptage des mots de passes
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); //--Fonction de hachage ou Package de chiffrement
 const User = require('../schemas/User');
-const jwt = require('jsonwebtoken')
-require("dotenv").config();
-
+const jwt = require('jsonwebtoken');//--permet l'échange sécurisé de jetons entre plusieurs parties pour vérifier l’authenticité et l’intégrité des données
+require("dotenv").config();//--Package de configuration des variables d’environnement
 
 //--Enregistrement de nouveaux utilisateurs
 exports.signup = (req, res, next) => {
@@ -18,7 +17,7 @@ exports.signup = (req, res, next) => {
                 email: req.body.email,
                 password: hash
             })
-            user.save()//--Enregistrement de l'utilisateur dans la ase de donnée
+            user.save()//--Enregistrement de l'utilisateur dans la base de donnée
                 .then(() => res.status(201).json({ message: 'Utilisateur créé!' }))
                 .catch(error => res.status(400).json({ error }));
         })

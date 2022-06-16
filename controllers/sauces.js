@@ -1,12 +1,10 @@
 //--Logique métier des routes
 const Sauce = require('../schemas/Sauce');
-const fs = require('fs');
+const fs = require('fs'); //--Donne accès aux fonctions sui permettent de modifier le système de fichier y compris les fonctions qui permettent de supprimer
 
 //--Création d'une sauce
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
-    console.log('createSauce');
-    delete sauceObject._id;
     const sauce = new Sauce({
       ...sauceObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`//--Reconstruction de l'Url de l'image
@@ -24,7 +22,7 @@ exports.modifySauce = (req, res, next) => {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`//--Reconstruction de l'Url de l'image
     } : { ...req.body }
-//--Récupération du sauce dans la base et vérification qu'il appartient bien à la personne qui effectue la requête delete
+//--Récupération d'une sauce dans la base et vérification qu'il appartient bien à la personne qui effectue la requête delete
     Sauce.findOne({ _id: req.params.id }).then(
         (sauce) => {
             if (!sauce) {
@@ -33,7 +31,7 @@ exports.modifySauce = (req, res, next) => {
                 })
             }
             if (sauce.userId !== req.auth.userId) {
-                return res.status(401).json({
+                return res.status(403).json({
                     error: new Error('Requête non autorisée !')
                 })
             }
