@@ -3,7 +3,7 @@ const Sauce = require('../schemas/Sauce');
 const fs = require('fs'); //--Donne accès aux fonctions sui permettent de modifier le système de fichier y compris les fonctions qui permettent de supprimer
 const path = require('path');
 
-//--Création d'une sauce
+//**********Création d'une sauce
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     const sauce = new Sauce({
@@ -15,7 +15,7 @@ exports.createSauce = (req, res, next) => {
       .catch(error => res.status(400).json({ error }));
 };
 
-//--Modification d'une sauce
+//**********Modification d'une sauce
 exports.modifySauce = (req, res, next) => {
 //--Test > Nouvelle image ou non
     const sauceObject = req.file ? //--req.file ? est un opérateur ternaire pour savoir si un fichier existe
@@ -36,22 +36,19 @@ exports.modifySauce = (req, res, next) => {
                     error: new Error('Requête non autorisée !')
                 })
             }
-//--Suppression de lancienn image dans le système de fichier
+//--Suppression de lancienne image dans le système de fichier
             const fileName = sauce.imageUrl.split('/images/')[1]//--Nom de l'ancienne sauce
+            fs.unlink(`images/${fileName}`, () => {
+                Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })//--Cette ligne permet de comparer les id afin d'être certain de mettre à jour le bon sauce
+                  .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+                  .catch(error => res.status(400).json({ error }));
+            })
             const fileLocation = __dirname + '/backend/images/'
-            console.log(fileName)
-            console.log(fileLocation)
-            console.log(fileLocation + fileName)
-/*             fs.unlinkSync(fileLocation + fileName) */
-
-            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })//--Cette ligne permet de comparer les id afin d'être certain de mettre à jour le bon sauce
-            .then(() => res.status(200).json({ message: 'Objet modifié !'}))
-            .catch(error => res.status(400).json({ error }));
         }
     )
 };
 
-//--Suppression d'une sauce
+//**********Suppression d'une sauce
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })//--On trouve l'objet dans la base de données 
         .then(sauce => {
@@ -65,21 +62,21 @@ exports.deleteSauce = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-//--Récupérer une sauce
+//**********Récupération une sauce
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => res.status(200).json(sauce))
         .catch(error => res.status(404).json({ error }));
 };
 
-//--Récupérer toutes les sauces
+//**********Récupération de toutes les sauces
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }));
 };
 
-//*****Likes et Dislikes
+//**********Likes et Dislikes
 exports.likeSauce = (req, res, next) => {
 
 //--Si l'utilisateur ajoute un like
