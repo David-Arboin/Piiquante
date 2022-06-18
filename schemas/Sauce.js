@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');//--Infrastructure de modélisation d’objet pour MongoDB dans Node.js
 
+const mongooseErrors = require('mongoose-errors')//--Gestionnaire d'erreurs monggose
+
 const sauceSchema = mongoose.Schema({
     userId : {type: String, required: true }, //-- l'identifiant MongoDB unique de l'utilisateur qui a créé la sauce
     name: {type: String, required: true }, //-- nom de la sauce
@@ -14,4 +16,5 @@ const sauceSchema = mongoose.Schema({
     usersDisliked: { type: [String], required: false } //-- tableau des identifiants des utilisateurs qui n'ont pas aimé (= disliked) la sauce
 });
 
+sauceSchema.plugin(mongooseErrors);
 module.exports = mongoose.model('Sauce', sauceSchema);

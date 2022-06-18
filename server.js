@@ -1,5 +1,12 @@
 const http = require('http');//--Import du package http de node
 const app = require('./app');
+const path = require('path');
+const fs = require('fs');
+
+//--Création du dossier images s'il n'existe pas
+if (!fs.existsSync(__dirname + "/images")) {
+   fs.mkdirSync(path.join(__dirname, "images"))
+};
 
 //--Renvoie un port valide, qu'il soit fourni sous la forme d'un numéro ou d'une chaîne ;
 const normalizePort = val => {
