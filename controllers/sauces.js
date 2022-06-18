@@ -1,6 +1,7 @@
 //--Logique métier des routes
 const Sauce = require('../schemas/Sauce');
 const fs = require('fs'); //--Donne accès aux fonctions sui permettent de modifier le système de fichier y compris les fonctions qui permettent de supprimer
+const path = require('path');
 
 //--Création d'une sauce
 exports.createSauce = (req, res, next) => {
@@ -35,6 +36,14 @@ exports.modifySauce = (req, res, next) => {
                     error: new Error('Requête non autorisée !')
                 })
             }
+//--Suppression de lancienn image dans le système de fichier
+            const fileName = sauce.imageUrl.split('/images/')[1]//--Nom de l'ancienne sauce
+            const fileLocation = __dirname + '/backend/images/'
+            console.log(fileName)
+            console.log(fileLocation)
+            console.log(fileLocation + fileName)
+/*             fs.unlinkSync(fileLocation + fileName) */
+
             Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })//--Cette ligne permet de comparer les id afin d'être certain de mettre à jour le bon sauce
             .then(() => res.status(200).json({ message: 'Objet modifié !'}))
             .catch(error => res.status(400).json({ error }));
