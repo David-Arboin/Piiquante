@@ -56,18 +56,18 @@ exports.deleteSauce = (req, res, next) => {
           if (!sauce) {
             return res.status(404).json({ message: 'Sauce non trouvée !' })
         }
-        if (sauce.userId !== req.auth.userId) {
-            return res.status(403).json({ message: 'Requête non autorisée !'})
-        }else {
-          const filename = sauce.imageUrl.split('/images/')[1];//--Ici, split renvoit un tableau composé de deux éléments. 1- Ce qu'il y avant /images/ et un deuxième élément avec ce qu'il y après /images/
-          fs.unlink(`images/${filename}`, () => {//--unlink est une fonction de fs (file système qui permet de supprimer un fichier``)
-              Sauce.deleteOne({ _id: req.params.id })//--Ici, pas besoin de 2eme argument car c'est une suppression
-                  .then(() => res.status(200).json({ message: 'Sauce supprimé !'}))
-                  .catch(error => res.status(400).json({ error })); 
-          });
-        }
-      })
-        .catch(error => res.status(500).json({ error }));
+          if (sauce.userId !== req.auth.userId) {
+              return res.status(403).json({ message: 'Requête non autorisée !'})
+          }else {
+            const filename = sauce.imageUrl.split('/images/')[1];//--Ici, split renvoit un tableau composé de deux éléments. 1- Ce qu'il y avant /images/ et un deuxième élément avec ce qu'il y après /images/
+            fs.unlink(`images/${filename}`, () => {//--unlink est une fonction de fs (file système qui permet de supprimer un fichier``)
+                Sauce.deleteOne({ _id: req.params.id })//--Ici, pas besoin de 2eme argument car c'est une suppression
+                    .then(() => res.status(200).json({ message: 'Sauce supprimé !'}))
+                    .catch(error => res.status(400).json({ error }));
+            });
+          }
+        })
+          .catch(error => res.status(500).json({ error }));
 };
 
 //**********Récupération une sauce

@@ -6,6 +6,8 @@ require("dotenv").config();//--Package de configuration des variables d’enviro
 
 //--Enregistrement de nouveaux utilisateurs
 exports.signup = (req, res, next) => {
+//--Vérification du format de l'email
+    if(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(req.body.email)){
     //--Hashage du mot de passe (fondtion asynchrone)
     bcrypt.hash(
         //--Récupération du mot de passe envoyé par le frontend dans le corps de la requête
@@ -22,7 +24,10 @@ exports.signup = (req, res, next) => {
                 .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));    
-    };
+    }else {
+        return res.status(401).json({ message: "Ceci n'est pas un email valide" })
+    }
+};
 
 //--Connecter un utilisateur existant
 exports.login = (req, res, next) => {
