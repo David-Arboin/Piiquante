@@ -8,22 +8,28 @@ require("dotenv").config();//--Package de configuration des variables d’enviro
 exports.signup = (req, res, next) => {
 //--Vérification du format de l'email
     if(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(req.body.email)){
-    //--Hashage du mot de passe (fondtion asynchrone)
+//--Vérification de la qualité du mot de passe
+        if (/^(?=.{10,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/g.test(req.body.password)) {
+            //--Hashage du mot de passe (fondtion asynchrone)
     bcrypt.hash(
         //--Récupération du mot de passe envoyé par le frontend dans le corps de la requête
-        req.body.password, 
+                req.body.password, 
         //--Nombre d'exécution de l'algorihme de hashage
-        10)
-        .then(hash => {
-            const user = new User({//--Crée un nouvel utilisateur avec le mot de passe crypté et l'adresse mail passée dans le corps de la requête
-                email: req.body.email,
-                password: hash
-            })
-            user.save()//--Enregistrement de l'utilisateur dans la base de donnée
-                .then(() => res.status(201).json({ message: 'Utilisateur créé!' }))
-                .catch(error => res.status(400).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));    
+                10)
+                .then(hash => {
+                    const user = new User({//--Crée un nouvel utilisateur avec le mot de passe crypté et l'adresse mail passée dans le corps de la requête
+                        email: req.body.email,
+                        password: hash
+                    })
+                    user.save()//--Enregistrement de l'utilisateur dans la base de donnée
+                        .then(() => res.status(201).json({ message: 'Utilisateur créé!' }))
+                        .catch(error => res.status(400).json({ error }));
+                })
+                .catch(error => res.status(500).json({ error })); 
+        }else {
+            return res.status(401).json({ message: "Votre mot de passe doit contenir au minimum 10 caractères, un chiffre, une minuscule, une majusle, un caratère spécial" })
+        }
+   
     }else {
         return res.status(401).json({ message: "Ceci n'est pas un email valide" })
     }
