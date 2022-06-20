@@ -39,6 +39,7 @@ exports.modifySauce = (req, res, next) => {
 //--Suppression de lancienne image dans le système de fichier
             const fileName = sauce.imageUrl.split('/images/')[1]//--Nom de l'ancienne sauce
             fs.unlink(`images/${fileName}`, () => {
+//--Mise à jour de la sauce
                 Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })//--Cette ligne permet de comparer les id afin d'être certain de mettre à jour le bon sauce
                   .then(() => res.status(200).json({ message: 'Objet modifié !'}))
                   .catch(error => res.status(400).json({ error }));
@@ -49,15 +50,23 @@ exports.modifySauce = (req, res, next) => {
 
 //**********Suppression d'une sauce
 exports.deleteSauce = (req, res, next) => {
+//--Vérification du propriétaire de la sauce
     Sauce.findOne({ _id: req.params.id })//--On trouve l'objet dans la base de données 
         .then(sauce => {
-            const filename = sauce.imageUrl.split('/images/')[1];//--Ici, split renvoit un tableau composé de deux éléments. 1- Ce qu'il y avant /images/ et un deuxième élément avec ce qu'il y après /images/
-            fs.unlink(`images/${filename}`, () => {//--unlink est une fonction de fs (file système qui permet de supprimer un fichier``)
-                Sauce.deleteOne({ _id: req.params.id })//--Ici, pas besoin de 2eme argument car c'est une suppression
-                    .then(() => res.status(200).json({ message: 'Sauce supprimé !'}))
-                    .catch(error => res.status(400).json({ error })); 
-            });
-        })
+          if (!sauce) {
+            return res.status(404).json({ message: 'Sauce non trouvée !' })
+        }
+        if (sauce.userId !== req.auth.userId) {
+            return res.status(403).json({ message: 'Requête non autorisée !'})
+        }else {
+          const filename = sauce.imageUrl.split('/images/')[1];//--Ici, split renvoit un tableau composé de deux éléments. 1- Ce qu'il y avant /images/ et un deuxième élément avec ce qu'il y après /images/
+          fs.unlink(`images/${filename}`, () => {//--unlink est une fonction de fs (file système qui permet de supprimer un fichier``)
+              Sauce.deleteOne({ _id: req.params.id })//--Ici, pas besoin de 2eme argument car c'est une suppression
+                  .then(() => res.status(200).json({ message: 'Sauce supprimé !'}))
+                  .catch(error => res.status(400).json({ error })); 
+          });
+        }
+      })
         .catch(error => res.status(500).json({ error }));
 };
 
